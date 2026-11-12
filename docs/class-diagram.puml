@@ -37,7 +37,7 @@ class EUK00361749_Admin {
   - passwordHash : String
   + EUK00361749_Admin(username : String, password : String, fullName : String, contactNumber : String, email : String)
   + getUsername() : String
-  + checkCredentials(username : String, password : String) : boolean
+  + checkCredentials(enteredUsername : String, enteredPassword : String) : boolean
   + getRole() : String
   + getIdentifier() : String
   - {static} hashPassword(password : String) : String
@@ -55,12 +55,14 @@ enum EUK00361749_RoomType {
   - taxRate : BigDecimal
   - includedGuests : int
   - complimentaryBreakfast : boolean
+  + getDisplayName() : String
   + getDailyRate() : BigDecimal
   + getExtraGuestCharge() : BigDecimal
   + getTaxRate() : BigDecimal
   + getIncludedGuests() : int
   + getMaximumGuests() : int
   + hasComplimentaryBreakfast() : boolean
+  + toString() : String
 }
 
 enum EUK00361749_BedType {
@@ -68,12 +70,16 @@ enum EUK00361749_BedType {
   DOUBLE
   QUEEN
   KING
+  - displayName : String
+  + toString() : String
 }
 
 enum EUK00361749_RoomStatus {
   AVAILABLE
   RESERVED
   UNDER_MAINTENANCE
+  - displayName : String
+  + toString() : String
 }
 
 class EUK00361749_Room {
@@ -87,6 +93,7 @@ class EUK00361749_Room {
   + getBedType() : EUK00361749_BedType
   + getStatus() : EUK00361749_RoomStatus
   + withStatus(newStatus : RoomStatus) : EUK00361749_Room
+  + toString() : String
 }
 
 class EUK00361749_Booking {
@@ -99,10 +106,17 @@ class EUK00361749_Booking {
   - cancelled : boolean
   - EUK00361749_Booking(builder : EUK00361749_BookingBuilder)
   + getBookingId() : String
+  + getGuest() : EUK00361749_Guest
+  + getRoom() : EUK00361749_Room
+  + getCheckInDate() : LocalDate
+  + getCheckOutDate() : LocalDate
+  + getNumberOfGuests() : int
+  + isCancelled() : boolean
   + getNumberOfNights() : long
-  + overlaps(checkIn : LocalDate, checkOut : LocalDate) : boolean
+  + overlaps(otherCheckIn : LocalDate, otherCheckOut : LocalDate) : boolean
   + cancel() : EUK00361749_Booking
   + toBuilder() : EUK00361749_BookingBuilder
+  + toString() : String
 }
 
 class "EUK00361749_Booking.EUK00361749_BookingBuilder" as EUK00361749_BookingBuilder <<static nested>> {
@@ -136,6 +150,7 @@ class EUK00361749_LongStayDiscount {
 class EUK00361749_Invoice {
   + {static} BOOKING_ADVANCE : BigDecimal
   - booking : EUK00361749_Booking
+  - discountDescription : String
   - extraGuests : int
   - baseRoomCharge : BigDecimal
   - extraGuestCharge : BigDecimal
@@ -145,13 +160,22 @@ class EUK00361749_Invoice {
   - finalPayable : BigDecimal
   - refundDue : BigDecimal
   + EUK00361749_Invoice(booking : Booking, discountPolicy : DiscountPolicy)
+  + getBooking() : EUK00361749_Booking
+  + getBaseRoomCharge() : BigDecimal
+  + getExtraGuestCharge() : BigDecimal
+  + getDiscount() : BigDecimal
+  + getTax() : BigDecimal
+  + getTotalBeforeAdvance() : BigDecimal
   + getFinalPayable() : BigDecimal
   + getRefundDue() : BigDecimal
   + toString() : String
   + {static} formatMoney(amount : BigDecimal) : String
+  - {static} money(amount : BigDecimal) : BigDecimal
+  - {static} row(label : String, value : String) : String
 }
 
 class EUK00361749_Store {
+  - {static} FILE_HEADER : String
   - roomsById : Map<String, EUK00361749_Room>
   - guestsByDocument : Map<String, EUK00361749_Guest>
   - bookingsById : Map<String, EUK00361749_Booking>
@@ -167,9 +191,15 @@ class EUK00361749_Store {
   ~ deleteRoom(roomId : String) : void
   + saveToFile(file : Path) : void
   + {static} loadFromFile(file : Path) : EUK00361749_Store
+  - loadRoom(fields : String[]) : void
+  - loadGuest(fields : String[]) : void
+  - loadBooking(fields : String[]) : void
+  - {static} encodeRow(fields : String...) : String
+  - {static} decodeRow(line : String) : String[]
 }
 
 class EUK00361749_BookingSorter <<utility>> {
+  - EUK00361749_BookingSorter()
   + {static} sortByCheckInDate(bookings : List<Booking>) : List<Booking>
   - {static} merge(left : List<Booking>, right : List<Booking>) : List<Booking>
   - {static} compare(first : Booking, second : Booking) : int
@@ -177,31 +207,43 @@ class EUK00361749_BookingSorter <<utility>> {
 
 class EUK00361749_Service {
   + {static} HOTEL_ZONE : ZoneId
+  + {static} CHECK_IN_TIME : LocalTime
   + {static} MINIMUM_DAYS_IN_ADVANCE : int
   + {static} CHANGE_CUTOFF_HOURS : int
+  - {static} BOOKING_ID_PREFIX : String
   - store : EUK00361749_Store
   - clock : Clock
   - discountPolicy : EUK00361749_DiscountPolicy
+  + EUK00361749_Service(store : Store, clock : Clock, discountPolicy : DiscountPolicy)
   + addRoom(room : Room) : void
-  + updateRoom(room : Room) : void
-  + changeRoomStatus(roomId : String, status : RoomStatus) : EUK00361749_Room
+  + updateRoom(updatedRoom : Room) : void
+  + changeRoomStatus(roomId : String, newStatus : RoomStatus) : EUK00361749_Room
   + removeRoom(roomId : String) : void
+  + getAllRooms() : List<EUK00361749_Room>
+  + getAllGuests() : List<EUK00361749_Guest>
   + registerGuest(guest : Guest) : void
-  + searchAvailableRooms(type : RoomType, checkIn : LocalDate, checkOut : LocalDate) : List<Room>
+  + findGuest(nicOrPassport : String) : EUK00361749_Guest
+  + searchAvailableRooms(roomType : RoomType, checkIn : LocalDate, checkOut : LocalDate) : List<Room>
   + quoteReservation(nic : String, roomId : String, guests : int, checkIn : LocalDate, checkOut : LocalDate) : Invoice
   + makeReservation(nic : String, roomId : String, guests : int, checkIn : LocalDate, checkOut : LocalDate) : Booking
   + cancelReservation(bookingId : String) : EUK00361749_Booking
-  + modifyReservation(bookingId : String, roomId : String, guests : int, checkIn : LocalDate, checkOut : LocalDate) : Booking
-  + searchReservations(nameOrId : String) : List<Booking>
-  + viewReservationsByCheckIn(date : LocalDate) : List<Booking>
+  + modifyReservation(bookingId : String, newRoomId : String, guests : int, checkIn : LocalDate, checkOut : LocalDate) : Booking
+  + searchReservations(guestNameOrBookingId : String) : List<Booking>
+  + viewReservationsByCheckIn(checkInDate : LocalDate) : List<Booking>
   + generateInvoice(bookingId : String) : EUK00361749_Invoice
+  + findBookingOrFail(bookingId : String) : EUK00361749_Booking
+  - buildValidatedBooking(bookingId : String, nic : String, roomId : String, guests : int, checkIn : LocalDate, checkOut : LocalDate, ignoreId : String) : Booking
   - validateStayDates(checkIn : LocalDate, checkOut : LocalDate) : void
-  - isRoomFree(room : Room, checkIn : LocalDate, checkOut : LocalDate, ignoreId : String) : boolean
+  - isRoomFree(room : Room, checkIn : LocalDate, checkOut : LocalDate, bookingIdToIgnore : String) : boolean
   - ensureChangeAllowed(booking : Booking) : void
+  - hasCurrentOrFutureBooking(roomId : String) : boolean
+  - findRoomOrFail(roomId : String) : EUK00361749_Room
   - generateNextBookingId() : String
 }
 
 class EUK00361749_HotelSystem <<Singleton>> {
+  + {static} DEFAULT_ADMIN_USERNAME : String
+  + {static} DEFAULT_ADMIN_PASSWORD : String
   - {static} instance : EUK00361749_HotelSystem
   - dataFile : Path
   - administrator : EUK00361749_Admin
@@ -210,19 +252,46 @@ class EUK00361749_HotelSystem <<Singleton>> {
   - EUK00361749_HotelSystem(dataFile : Path)
   + {static} getInstance(dataFile : Path) : EUK00361749_HotelSystem
   + getService() : EUK00361749_Service
+  + getDataFile() : Path
   + loginAdministrator(username : String, password : String) : EUK00361749_Admin
   + saveChanges() : void
+  - reloadFromFile() : void
 }
 
 class EUK00361749_Cli {
+  - {static} DIVIDER : String
   - input : Scanner
   - hotelSystem : EUK00361749_HotelSystem
+  - EUK00361749_Cli(hotelSystem : HotelSystem)
+  - service() : EUK00361749_Service
   - run() : void
+  - administratorLogin() : void
   - administratorMenu() : void
   - guestMenu() : void
+  - addRoom() : void
+  - updateRoom() : void
+  - changeRoomStatus() : void
+  - removeRoom() : void
+  - registerGuest() : void
+  - searchRooms() : void
   - makeReservation() : void
-  - readInt(prompt : String, min : int, max : int) : int
+  - viewByCheckInDate() : void
+  - cancelReservation() : void
+  - modifyReservation() : void
+  - exportInvoice() : void
+  - requireRegisteredGuest() : EUK00361749_Guest
+  - {static} printHeading(title : String) : void
+  - {static} printRooms(rooms : List<Room>) : void
+  - {static} printGuests(guests : List<Guest>) : void
+  - {static} printBookings(bookings : List<Booking>) : void
+  - runSafely(action : MenuAction) : void
+  - readText(prompt : String) : String
+  - readText(prompt : String, allowBlank : boolean) : String
+  - readInt(prompt : String, minimum : int, maximum : int) : int
   - readDate(prompt : String) : LocalDate
+  - {static} parseDate(text : String) : LocalDate
+  - chooseOption(prompt : String, options : T[]) : T
+  - confirm(question : String) : boolean
   + {static} main(args : String[]) : void
 }
 
@@ -254,4 +323,5 @@ EUK00361749_Service "1" --> "1" EUK00361749_DiscountPolicy
 EUK00361749_Service ..> EUK00361749_BookingSorter : uses
 EUK00361749_Service ..> EUK00361749_Invoice : <<creates>>
 EUK00361749_Cli "1" --> "1" EUK00361749_HotelSystem
+EUK00361749_Cli ..> EUK00361749_Service : uses
 @enduml
