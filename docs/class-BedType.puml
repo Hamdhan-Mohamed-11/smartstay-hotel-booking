@@ -1,0 +1,20 @@
+@startuml
+!pragma layout smetana
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam classBackgroundColor #F4F7FA
+skinparam classBorderColor #34465A
+skinparam defaultFontName DejaVu Sans
+skinparam defaultFontSize 12
+skinparam dpi 140
+enum EUK00361749_BedType {
++ {static} BedType SINGLE
++ {static} BedType DOUBLE
++ {static} BedType QUEEN
++ {static} BedType KING
++ {static} BedType[] values()
++ {static} BedType valueOf(String)
+- BedType()
+}
+@enduml

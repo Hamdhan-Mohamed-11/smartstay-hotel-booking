@@ -1,0 +1,49 @@
+TC001	Add room	ID 102, Deluxe	Room count 2	Room count 2	Pass
+TC002	Duplicate room	ID 101	Rejected	Room ID already exists.	Pass
+TC003	Update room	101 to Deluxe, KING	Deluxe and KING saved	Deluxe and KING saved	Pass
+TC004	Remove room	101 without history	Room count 0	Room count 0	Pass
+TC005	Unknown room	Delete 999	Rejected	Room not found.	Pass
+TC006	Duplicate guest	N1234567	Rejected	Guest already registered.	Pass
+TC007	Invalid email	bad email	Rejected	Enter a valid email address.	Pass
+TC008	Invalid phone	abc	Rejected	Phone: 7-15 digits, optional leading +.	Pass
+TC009	Blank guest name	Whitespace name	Rejected	Full name must contain 1-100 printable characters.	Pass
+TC010	Two-day boundary	Nov 5 booking for Nov 7	Accepted	Accepted	Pass
+TC011	One-day notice	Nov 6 check-in	Rejected	Book at least 2 calendar days in advance.	Pass
+TC012	Same-day checkout	Nov 7 to Nov 7	Rejected	Checkout must follow check-in.	Pass
+TC013	Reversed dates	Nov 8 to Nov 7	Rejected	Checkout must follow check-in.	Pass
+TC014	Zero guests	0 guests	Rejected	Guest count must be 1 to included capacity + 2.	Pass
+TC015	Too many guests	Standard, 5 guests	Rejected	Guest count must be 1 to included capacity + 2.	Pass
+TC016	Maximum occupancy	Standard, 4 guests	Accepted	Accepted	Pass
+TC017	Unregistered guest	UNKNOWN	Rejected	Register guest first.	Pass
+TC018	Maintenance exclusion	101 under maintenance	No search results; booking rejected	Room unavailable for these dates.	Pass
+TC019	Manual reserved exclusion	101 manually reserved	Rejected	Room unavailable for these dates.	Pass
+TC020	Overlap exclusion	Existing Nov 7-10, new Nov 9-11	Rejected	Room unavailable for these dates.	Pass
+TC021	Adjacent stays	Nov 7-9 and Nov 9-10	Two bookings	Two bookings	Pass
+TC022	Availability date filter	101 booked Nov 7-9	0 overlapping; 1 subsequent	0 overlapping; 1 subsequent	Pass
+TC023	Four-night bill	Standard, 2 guests, 4 nights	Discount 0; tax 2400; payable 16400	Discount 0; tax 2400; payable 16400	Pass
+TC024	Five-night bill with extra	Standard, 3 guests, 5 nights	Base 30000; extra 5000; discount 3600; tax 3140; payable 24540	30000 + 5000 - 3600 + 3140 - 10000 = 24540	Pass
+TC025	Advance exceeds total	Standard, 2 guests, 1 night	Payable 0; refund 3400	Payable 0; refund 3400	Pass
+TC026	Tariff STANDARD	1 night, capacity + 1 guest	Correct package tax and total	Total 7700.00	Pass
+TC027	Tariff DELUXE	1 night, capacity + 1 guest	Correct package tax and total	Total 11760.00	Pass
+TC028	Tariff SUITE	1 night, capacity + 1 guest	Correct package tax and total	Total 18400.00	Pass
+TC029	Tariff FAMILY_SUITE	1 night, capacity + 1 guest	Correct package tax and total	Total 23575.00	Pass
+TC030	Cancellation at 24h	Nov 6 at 14:00 for Nov 7 14:00	Cancelled	Cancelled; refund due 10000	Pass
+TC031	Cancellation inside 24h	Nov 6 at 14:00:01	Rejected	Changes/cancellation closed within 24 hours of check-in.	Pass
+TC032	Duplicate cancellation	Cancel same booking twice	Rejected second attempt	Booking already cancelled.	Pass
+TC033	Cancelled frees room	Cancel then rebook same dates	One available room; new booking accepted	Room released and rebooked	Pass
+TC034	Cancelled invoice	Invoice cancelled booking	Rejected	Cancelled booking: advance refunded; no active invoice.	Pass
+TC035	Modify booking	Increase to 5 nights, 3 guests	Same ID; revised bill 24540	Same ID; revised bill 24540	Pass
+TC036	Modify inside 24h	Change guests at 23h59m59s	Rejected	Changes/cancellation closed within 24 hours of check-in.	Pass
+TC037	Failed modification unchanged	Modify to zero guests	Rejected; original guest count 2	Rejected; original guest count 2	Pass
+TC038	Name search	aMiNa	One result	One result	Pass
+TC039	Booking ID search	Full generated ID	Exact booking	Exact booking found	Pass
+TC040	Check-in filtering and sort	Bookings Nov 10 and Nov 7	Nov 7 first; exact date count 1	Nov 7 first; exact date count 1	Pass
+TC041	Protect booked room update	Change type after booking	Rejected	Cannot change room with current/future bookings.	Pass
+TC042	Protect booking history	Delete booked room	Rejected	Room has booking history. Retain it and manage its status instead.	Pass
+TC043	Persistence round trip	Save 1 room, 1 guest, 1 booking	Reloaded identities and bill preserved	Reloaded 1 room, 1 guest, 1 booking; payable 24540	Pass
+TC044	Corrupt file rejection	Invalid file header	IOException; bytes unchanged	IOException; original bytes unchanged	Pass
+TC045	Missing file	Nonexistent local file	Empty store	Empty store	Pass
+TC046	Collection encapsulation	Clear returned room list	Internal room retained	Internal room retained	Pass
+TC047	Status persistence	Save manual maintenance status	Maintenance after reload	Maintenance after reload	Pass
+TC048	Cancellation persistence	Save cancelled booking	Cancelled after reload	Cancelled after reload	Pass
+TC049	Polymorphic policy	Alternative zero-discount subclass	Injected policy produces discount 0	Injected policy produces discount 0	Pass

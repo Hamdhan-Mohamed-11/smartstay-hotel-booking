@@ -1,0 +1,19 @@
+@startuml
+!pragma layout smetana
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam classBackgroundColor #F4F7FA
+skinparam classBorderColor #34465A
+skinparam defaultFontName DejaVu Sans
+skinparam defaultFontSize 12
+skinparam dpi 140
+enum EUK00361749_RoomStatus {
++ {static} RoomStatus AVAILABLE
++ {static} RoomStatus RESERVED
++ {static} RoomStatus UNDER_MAINTENANCE
++ {static} RoomStatus[] values()
++ {static} RoomStatus valueOf(String)
+- RoomStatus()
+}
+@enduml

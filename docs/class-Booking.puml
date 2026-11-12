@@ -1,0 +1,32 @@
+@startuml
+!pragma layout smetana
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam classBackgroundColor #F4F7FA
+skinparam classBorderColor #34465A
+skinparam defaultFontName DejaVu Sans
+skinparam defaultFontSize 12
+skinparam dpi 140
+class EUK00361749_Booking {
+- String id
+- Guest guest
+- Room room
+- LocalDate checkIn
+- LocalDate checkOut
+- int guests
+- boolean cancelled
++ Booking(String, Guest, Room, LocalDate, LocalDate, int, boolean)
++ String getId()
++ Guest getGuest()
++ Room getRoom()
++ LocalDate getCheckIn()
++ LocalDate getCheckOut()
++ int getGuests()
++ boolean isCancelled()
++ long nights()
++ boolean overlaps(LocalDate, LocalDate)
++ Booking cancel()
++ String toString()
+}
+@enduml

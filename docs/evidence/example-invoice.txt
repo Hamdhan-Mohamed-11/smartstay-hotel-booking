@@ -1,0 +1,13 @@
+SMARTSTAY INVOICE | BK-0933ea2c-7f34-497c-b5a3-bf808350ed37
+Room: 101 | STANDARD | QUEEN | LKR 6000 | included guests 2 | breakfast false | AVAILABLE
+Guest: N1234567 | Amina Silva | +94771234567 | amina@example.com
+Check-in: 2026-11-15 14:00 Asia/Colombo
+Check-out: 2026-11-20 | Nights: 5 | Guests: 3
+Base: LKR 30000
+Extra guests: LKR 5000
+Discount: LKR 3600.00
+Tax (10.00%): LKR 3140.00
+Total: LKR 34540.00
+Advance deducted: LKR 10000.00
+Final payable: LKR 24540.00
+Refund due: LKR 0.00

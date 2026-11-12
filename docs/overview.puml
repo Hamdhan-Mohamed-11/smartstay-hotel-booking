@@ -1,0 +1,41 @@
+@startuml
+!pragma layout smetana
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam classBackgroundColor #F4F7FA
+skinparam classBorderColor #34465A
+skinparam defaultFontName DejaVu Sans
+skinparam defaultFontSize 12
+skinparam dpi 140
+hide members
+class EUK00361749_Room
+enum EUK00361749_RoomType
+enum EUK00361749_BedType
+enum EUK00361749_RoomStatus
+class EUK00361749_Guest
+class EUK00361749_Booking
+class EUK00361749_Invoice
+abstract class EUK00361749_DiscountPolicy
+class EUK00361749_LongStayDiscount
+class EUK00361749_Store
+class EUK00361749_Service
+class EUK00361749_Cli
+EUK00361749_LongStayDiscount --|> EUK00361749_DiscountPolicy
+EUK00361749_Room --> EUK00361749_RoomType
+EUK00361749_Room --> EUK00361749_BedType
+EUK00361749_Room --> EUK00361749_RoomStatus
+EUK00361749_Booking "0..*" --> "1" EUK00361749_Guest : registered guest
+EUK00361749_Booking "0..*" --> "1" EUK00361749_Room : immutable snapshot
+EUK00361749_Invoice "0..*" --> "1" EUK00361749_Booking
+EUK00361749_Invoice ..> EUK00361749_DiscountPolicy : calculates discount
+EUK00361749_Store "1" o-- "0..*" EUK00361749_Room : inventory
+EUK00361749_Store "1" o-- "0..*" EUK00361749_Guest : registrations
+EUK00361749_Store "1" o-- "0..*" EUK00361749_Booking : reservations
+EUK00361749_Service --> "1" EUK00361749_Store
+EUK00361749_Service --> "1" EUK00361749_DiscountPolicy
+EUK00361749_Service ..> EUK00361749_Invoice : creates
+EUK00361749_Cli --> "1" EUK00361749_Service
+EUK00361749_Cli --> "1" EUK00361749_Store
+
+@enduml

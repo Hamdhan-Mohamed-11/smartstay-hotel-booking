@@ -1,0 +1,23 @@
+@startuml
+!pragma layout smetana
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam classBackgroundColor #F4F7FA
+skinparam classBorderColor #34465A
+skinparam defaultFontName DejaVu Sans
+skinparam defaultFontSize 12
+skinparam dpi 140
+class EUK00361749_Room {
+- String id
+- RoomType type
+- BedType bed
+- RoomStatus status
++ Room(String, RoomType, BedType, RoomStatus)
++ String getId()
++ RoomType getType()
++ BedType getBed()
++ RoomStatus getStatus()
++ String toString()
+}
+@enduml

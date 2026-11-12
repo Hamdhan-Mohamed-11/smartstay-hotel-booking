@@ -1,0 +1,37 @@
+@startuml
+!pragma layout smetana
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam classBackgroundColor #F4F7FA
+skinparam classBorderColor #34465A
+skinparam defaultFontName DejaVu Sans
+skinparam defaultFontSize 12
+skinparam dpi 140
+class EUK00361749_Service {
++ {static} ZoneId ZONE
+- Store store
+- Clock clock
+- DiscountPolicy discounts
++ Service(Store, Clock, DiscountPolicy)
++ void addRoom(Room)
++ void updateRoom(Room)
++ void removeRoom(String)
++ void register(Guest)
++ List<Room> rooms()
++ List<Guest> guests()
+- Room requireRoom(String)
++ Booking requireBooking(String)
+- {static} void fail(String)
+- void dates(LocalDate, LocalDate)
+- boolean available(Room, LocalDate, LocalDate, String)
++ List<Room> searchRooms(RoomType, LocalDate, LocalDate)
++ Booking book(String, String, int, LocalDate, LocalDate)
+- void eligible(Booking)
++ Booking cancel(String)
++ Booking modify(String, String, int, LocalDate, LocalDate)
++ List<Booking> searchBookings(String)
++ List<Booking> byCheckIn(LocalDate)
++ Invoice invoice(String)
+}
+@enduml

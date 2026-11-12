@@ -1,0 +1,16 @@
+@startuml
+!pragma layout smetana
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam classBackgroundColor #F4F7FA
+skinparam classBorderColor #34465A
+skinparam defaultFontName DejaVu Sans
+skinparam defaultFontSize 12
+skinparam dpi 140
+abstract class EUK00361749_DiscountPolicy {
++ DiscountPolicy()
++ BigDecimal discount(BigDecimal, long)
+# {abstract} BigDecimal rateFor(long)
+}
+@enduml

@@ -1,0 +1,5 @@
+out/
+data/
+*.class
+*.lock
+.DS_Store

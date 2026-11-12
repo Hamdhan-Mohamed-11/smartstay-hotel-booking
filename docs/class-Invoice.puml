@@ -1,0 +1,31 @@
+@startuml
+!pragma layout smetana
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam classBackgroundColor #F4F7FA
+skinparam classBorderColor #34465A
+skinparam defaultFontName DejaVu Sans
+skinparam defaultFontSize 12
+skinparam dpi 140
+class EUK00361749_Invoice {
++ {static} BigDecimal ADVANCE
+- Booking booking
+- BigDecimal base
+- BigDecimal extra
+- BigDecimal discount
+- BigDecimal tax
+- BigDecimal total
+- BigDecimal payable
+- BigDecimal refund
++ Invoice(Booking, DiscountPolicy)
++ BigDecimal getBase()
++ BigDecimal getExtra()
++ BigDecimal getDiscount()
++ BigDecimal getTax()
++ BigDecimal getTotal()
++ BigDecimal getPayable()
++ BigDecimal getRefund()
++ String toString()
+}
+@enduml

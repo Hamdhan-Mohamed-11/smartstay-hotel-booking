@@ -1,0 +1,30 @@
+@startuml
+!pragma layout smetana
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam classBackgroundColor #F4F7FA
+skinparam classBorderColor #34465A
+skinparam defaultFontName DejaVu Sans
+skinparam defaultFontSize 12
+skinparam dpi 140
+enum EUK00361749_RoomType {
++ {static} RoomType STANDARD
++ {static} RoomType DELUXE
++ {static} RoomType SUITE
++ {static} RoomType FAMILY_SUITE
+- int rate
+- int extra
+- int capacity
+- BigDecimal tax
+- boolean breakfast
++ {static} RoomType[] values()
++ {static} RoomType valueOf(String)
+- RoomType(int, int, String, int, boolean)
++ BigDecimal dailyRate()
++ BigDecimal extraRate()
++ BigDecimal taxRate()
++ int capacity()
++ boolean breakfast()
+}
+@enduml
