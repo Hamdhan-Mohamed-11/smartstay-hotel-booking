@@ -1,0 +1,257 @@
+@startuml SmartStay_Class_Diagram
+' Render with the VS Code "PlantUML" extension (Alt+D, then export PNG)
+' or paste into https://www.plantuml.com/plantuml
+!pragma layout smetana
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam classBackgroundColor #F7F9FC
+skinparam classBorderColor #2F3E4E
+skinparam defaultFontSize 12
+skinparam dpi 150
+title SmartStay Hotel Booking System - Class Diagram (EUK00361749)
+
+abstract class EUK00361749_Person {
+  - fullName : String
+  - contactNumber : String
+  - email : String
+  # EUK00361749_Person(fullName : String, contactNumber : String, email : String)
+  + getFullName() : String
+  + getContactNumber() : String
+  + getEmail() : String
+  + {abstract} getRole() : String
+  + {abstract} getIdentifier() : String
+  + toString() : String
+}
+
+class EUK00361749_Guest {
+  - nicOrPassport : String
+  + EUK00361749_Guest(nicOrPassport : String, fullName : String, contactNumber : String, email : String)
+  + getNicOrPassport() : String
+  + getRole() : String
+  + getIdentifier() : String
+}
+
+class EUK00361749_Admin {
+  - username : String
+  - passwordHash : String
+  + EUK00361749_Admin(username : String, password : String, fullName : String, contactNumber : String, email : String)
+  + getUsername() : String
+  + checkCredentials(username : String, password : String) : boolean
+  + getRole() : String
+  + getIdentifier() : String
+  - {static} hashPassword(password : String) : String
+}
+
+enum EUK00361749_RoomType {
+  STANDARD
+  DELUXE
+  SUITE
+  FAMILY_SUITE
+  + {static} MAX_EXTRA_GUESTS : int
+  - displayName : String
+  - dailyRate : BigDecimal
+  - extraGuestCharge : BigDecimal
+  - taxRate : BigDecimal
+  - includedGuests : int
+  - complimentaryBreakfast : boolean
+  + getDailyRate() : BigDecimal
+  + getExtraGuestCharge() : BigDecimal
+  + getTaxRate() : BigDecimal
+  + getIncludedGuests() : int
+  + getMaximumGuests() : int
+  + hasComplimentaryBreakfast() : boolean
+}
+
+enum EUK00361749_BedType {
+  SINGLE
+  DOUBLE
+  QUEEN
+  KING
+}
+
+enum EUK00361749_RoomStatus {
+  AVAILABLE
+  RESERVED
+  UNDER_MAINTENANCE
+}
+
+class EUK00361749_Room {
+  - roomId : String
+  - roomType : EUK00361749_RoomType
+  - bedType : EUK00361749_BedType
+  - status : EUK00361749_RoomStatus
+  + EUK00361749_Room(roomId : String, roomType : RoomType, bedType : BedType, status : RoomStatus)
+  + getRoomId() : String
+  + getRoomType() : EUK00361749_RoomType
+  + getBedType() : EUK00361749_BedType
+  + getStatus() : EUK00361749_RoomStatus
+  + withStatus(newStatus : RoomStatus) : EUK00361749_Room
+}
+
+class EUK00361749_Booking {
+  - bookingId : String
+  - guest : EUK00361749_Guest
+  - room : EUK00361749_Room
+  - checkInDate : LocalDate
+  - checkOutDate : LocalDate
+  - numberOfGuests : int
+  - cancelled : boolean
+  - EUK00361749_Booking(builder : EUK00361749_BookingBuilder)
+  + getBookingId() : String
+  + getNumberOfNights() : long
+  + overlaps(checkIn : LocalDate, checkOut : LocalDate) : boolean
+  + cancel() : EUK00361749_Booking
+  + toBuilder() : EUK00361749_BookingBuilder
+}
+
+class "EUK00361749_Booking.EUK00361749_BookingBuilder" as EUK00361749_BookingBuilder <<static nested>> {
+  - bookingId : String
+  - guest : EUK00361749_Guest
+  - room : EUK00361749_Room
+  - checkInDate : LocalDate
+  - checkOutDate : LocalDate
+  - numberOfGuests : int
+  - cancelled : boolean
+  + EUK00361749_BookingBuilder(bookingId : String, guest : Guest, room : Room)
+  + stayDates(checkIn : LocalDate, checkOut : LocalDate) : EUK00361749_BookingBuilder
+  + numberOfGuests(count : int) : EUK00361749_BookingBuilder
+  + cancelled(isCancelled : boolean) : EUK00361749_BookingBuilder
+  + build() : EUK00361749_Booking
+}
+
+abstract class EUK00361749_DiscountPolicy <<Strategy>> {
+  + calculateDiscount(baseRoomCharge : BigDecimal, numberOfNights : long) : BigDecimal
+  # {abstract} getDiscountRate(numberOfNights : long) : BigDecimal
+  + {abstract} getDescription() : String
+}
+
+class EUK00361749_LongStayDiscount {
+  + {static} MINIMUM_NIGHTS : int
+  - {static} LONG_STAY_RATE : BigDecimal
+  # getDiscountRate(numberOfNights : long) : BigDecimal
+  + getDescription() : String
+}
+
+class EUK00361749_Invoice {
+  + {static} BOOKING_ADVANCE : BigDecimal
+  - booking : EUK00361749_Booking
+  - extraGuests : int
+  - baseRoomCharge : BigDecimal
+  - extraGuestCharge : BigDecimal
+  - discount : BigDecimal
+  - tax : BigDecimal
+  - totalBeforeAdvance : BigDecimal
+  - finalPayable : BigDecimal
+  - refundDue : BigDecimal
+  + EUK00361749_Invoice(booking : Booking, discountPolicy : DiscountPolicy)
+  + getFinalPayable() : BigDecimal
+  + getRefundDue() : BigDecimal
+  + toString() : String
+  + {static} formatMoney(amount : BigDecimal) : String
+}
+
+class EUK00361749_Store {
+  - roomsById : Map<String, EUK00361749_Room>
+  - guestsByDocument : Map<String, EUK00361749_Guest>
+  - bookingsById : Map<String, EUK00361749_Booking>
+  + getAllRooms() : List<EUK00361749_Room>
+  + getAllGuests() : List<EUK00361749_Guest>
+  + getAllBookings() : List<EUK00361749_Booking>
+  + findRoom(roomId : String) : EUK00361749_Room
+  + findGuest(nicOrPassport : String) : EUK00361749_Guest
+  + findBooking(bookingId : String) : EUK00361749_Booking
+  ~ saveRoom(room : Room) : void
+  ~ saveGuest(guest : Guest) : void
+  ~ saveBooking(booking : Booking) : void
+  ~ deleteRoom(roomId : String) : void
+  + saveToFile(file : Path) : void
+  + {static} loadFromFile(file : Path) : EUK00361749_Store
+}
+
+class EUK00361749_BookingSorter <<utility>> {
+  + {static} sortByCheckInDate(bookings : List<Booking>) : List<Booking>
+  - {static} merge(left : List<Booking>, right : List<Booking>) : List<Booking>
+  - {static} compare(first : Booking, second : Booking) : int
+}
+
+class EUK00361749_Service {
+  + {static} HOTEL_ZONE : ZoneId
+  + {static} MINIMUM_DAYS_IN_ADVANCE : int
+  + {static} CHANGE_CUTOFF_HOURS : int
+  - store : EUK00361749_Store
+  - clock : Clock
+  - discountPolicy : EUK00361749_DiscountPolicy
+  + addRoom(room : Room) : void
+  + updateRoom(room : Room) : void
+  + changeRoomStatus(roomId : String, status : RoomStatus) : EUK00361749_Room
+  + removeRoom(roomId : String) : void
+  + registerGuest(guest : Guest) : void
+  + searchAvailableRooms(type : RoomType, checkIn : LocalDate, checkOut : LocalDate) : List<Room>
+  + quoteReservation(nic : String, roomId : String, guests : int, checkIn : LocalDate, checkOut : LocalDate) : Invoice
+  + makeReservation(nic : String, roomId : String, guests : int, checkIn : LocalDate, checkOut : LocalDate) : Booking
+  + cancelReservation(bookingId : String) : EUK00361749_Booking
+  + modifyReservation(bookingId : String, roomId : String, guests : int, checkIn : LocalDate, checkOut : LocalDate) : Booking
+  + searchReservations(nameOrId : String) : List<Booking>
+  + viewReservationsByCheckIn(date : LocalDate) : List<Booking>
+  + generateInvoice(bookingId : String) : EUK00361749_Invoice
+  - validateStayDates(checkIn : LocalDate, checkOut : LocalDate) : void
+  - isRoomFree(room : Room, checkIn : LocalDate, checkOut : LocalDate, ignoreId : String) : boolean
+  - ensureChangeAllowed(booking : Booking) : void
+  - generateNextBookingId() : String
+}
+
+class EUK00361749_HotelSystem <<Singleton>> {
+  - {static} instance : EUK00361749_HotelSystem
+  - dataFile : Path
+  - administrator : EUK00361749_Admin
+  - store : EUK00361749_Store
+  - service : EUK00361749_Service
+  - EUK00361749_HotelSystem(dataFile : Path)
+  + {static} getInstance(dataFile : Path) : EUK00361749_HotelSystem
+  + getService() : EUK00361749_Service
+  + loginAdministrator(username : String, password : String) : EUK00361749_Admin
+  + saveChanges() : void
+}
+
+class EUK00361749_Cli {
+  - input : Scanner
+  - hotelSystem : EUK00361749_HotelSystem
+  - run() : void
+  - administratorMenu() : void
+  - guestMenu() : void
+  - makeReservation() : void
+  - readInt(prompt : String, min : int, max : int) : int
+  - readDate(prompt : String) : LocalDate
+  + {static} main(args : String[]) : void
+}
+
+' ---------- inheritance ----------
+EUK00361749_Person <|-- EUK00361749_Guest
+EUK00361749_Person <|-- EUK00361749_Admin
+EUK00361749_DiscountPolicy <|-- EUK00361749_LongStayDiscount
+
+' ---------- associations ----------
+EUK00361749_Room "0..*" --> "1" EUK00361749_RoomType
+EUK00361749_Room "0..*" --> "1" EUK00361749_BedType
+EUK00361749_Room "0..*" --> "1" EUK00361749_RoomStatus
+EUK00361749_Booking "0..*" --> "1" EUK00361749_Guest : made by >
+EUK00361749_Booking "0..*" --> "1" EUK00361749_Room : reserves >
+EUK00361749_Booking +-- EUK00361749_BookingBuilder
+EUK00361749_BookingBuilder ..> EUK00361749_Booking : <<creates>>
+EUK00361749_Invoice "0..*" --> "1" EUK00361749_Booking : bills >
+EUK00361749_Invoice ..> EUK00361749_DiscountPolicy : uses
+
+' ---------- aggregation / composition ----------
+EUK00361749_Store "1" o-- "0..*" EUK00361749_Room : inventory
+EUK00361749_Store "1" o-- "0..*" EUK00361749_Guest : registrations
+EUK00361749_Store "1" o-- "0..*" EUK00361749_Booking : reservations
+EUK00361749_HotelSystem "1" *-- "1" EUK00361749_Store
+EUK00361749_HotelSystem "1" *-- "1" EUK00361749_Service
+EUK00361749_HotelSystem "1" *-- "1" EUK00361749_Admin
+EUK00361749_Service "1" --> "1" EUK00361749_Store
+EUK00361749_Service "1" --> "1" EUK00361749_DiscountPolicy
+EUK00361749_Service ..> EUK00361749_BookingSorter : uses
+EUK00361749_Service ..> EUK00361749_Invoice : <<creates>>
+EUK00361749_Cli "1" --> "1" EUK00361749_HotelSystem
+@enduml
