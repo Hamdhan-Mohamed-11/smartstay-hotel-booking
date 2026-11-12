@@ -1,45 +1,42 @@
 package smartstay;
 
-/** Immutable registered guest; document identifier is the unique key. */
-public final class EUK00361749_Guest {
-  private final String document, name, phone, email;
+import java.util.Locale;
 
-  public EUK00361749_Guest(String document, String name, String phone, String email) {
-    if (document == null || !document.matches("[A-Za-z0-9]{5,20}"))
-      throw new IllegalArgumentException("NIC/passport: 5-20 letters or digits.");
-    if (name == null
-        || name.isBlank()
-        || name.length() > 100
-        || name.chars().anyMatch(Character::isISOControl))
-      throw new IllegalArgumentException("Full name must contain 1-100 printable characters.");
-    if (phone == null || !phone.matches("[+]?[0-9]{7,15}"))
-      throw new IllegalArgumentException("Phone: 7-15 digits, optional leading +.");
-    if (email == null || !email.matches("[^\\s@]+@[^\\s@]+[.][^\\s@]+") || email.length() > 254)
-      throw new IllegalArgumentException("Enter a valid email address.");
-    this.document = document.toUpperCase(java.util.Locale.ROOT);
-    this.name = name.trim();
-    this.phone = phone;
-    this.email = email;
-  }
+/**
+ * A registered hotel guest. The NIC or passport number is the unique key used to find the guest
+ * when a reservation is made. Instances are immutable once validated.
+ */
+public final class EUK00361749_Guest extends EUK00361749_Person {
 
-  public String getDocument() {
-    return document;
-  }
+    private final String nicOrPassport;
 
-  public String getName() {
-    return name;
-  }
+    /**
+     * Registers a guest with the four details required by the business rules.
+     *
+     * @param nicOrPassport 5-20 letters or digits (stored in upper case)
+     * @param fullName      guest's full name
+     * @param contactNumber guest's phone number
+     * @param email         guest's email address
+     */
+    public EUK00361749_Guest(String nicOrPassport, String fullName, String contactNumber, String email) {
+        super(fullName, contactNumber, email);
+        if (nicOrPassport == null || !nicOrPassport.trim().matches("[A-Za-z0-9]{5,20}")) {
+            throw new IllegalArgumentException("NIC/Passport must be 5-20 letters or digits.");
+        }
+        this.nicOrPassport = nicOrPassport.trim().toUpperCase(Locale.ROOT);
+    }
 
-  public String getPhone() {
-    return phone;
-  }
+    public String getNicOrPassport() {
+        return nicOrPassport;
+    }
 
-  public String getEmail() {
-    return email;
-  }
+    @Override
+    public String getRole() {
+        return "Guest";
+    }
 
-  @Override
-  public String toString() {
-    return document + " | " + name + " | " + phone + " | " + email;
-  }
+    @Override
+    public String getIdentifier() {
+        return nicOrPassport;
+    }
 }
