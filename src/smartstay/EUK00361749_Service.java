@@ -146,7 +146,7 @@ public final class EUK00361749_Service {
         return booking;
     }
 
-    /** Cancels a reservation if it is more than 24 hours before check-in. */
+    /** Cancels a reservation at least 24 hours before check-in, including the exact boundary. */
     public EUK00361749_Booking cancelReservation(String bookingId) {
         EUK00361749_Booking booking = findBookingOrFail(bookingId);
         ensureChangeAllowed(booking);

@@ -83,8 +83,8 @@ public final class EUK00361749_Store {
     /**
      * Writes all records to a text file. Each field is Base64-encoded so that tabs or new lines in
      * user input cannot break the file format (this is encoding, not encryption). The data is
-     * written to a temporary file first and then moved over the old file, so a crash part-way
-     * through never leaves a half-written data file.
+     * written to a temporary file first and then atomically moved over the old file when the
+     * filesystem supports it. The fallback replacement cannot guarantee crash atomicity.
      */
     public void saveToFile(Path file) throws IOException {
         List<String> lines = new ArrayList<>();

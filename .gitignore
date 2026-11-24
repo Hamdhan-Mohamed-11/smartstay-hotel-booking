@@ -1,4 +1,5 @@
 out/
+audit-out/
 data/
 *.class
 *.lock

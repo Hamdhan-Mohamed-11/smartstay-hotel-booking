@@ -47,8 +47,8 @@ clock of 5 Nov 2026 10:00 Asia/Colombo, and writes the results table to
 | Data structures | `LinkedHashMap` for O(1) lookup by ID, `ArrayList` for results |
 | Algorithms | merge sort (`BookingSorter`), linear search, interval-overlap availability check, 5-step billing |
 
-The class diagram source is `docs/class-diagram.puml` (render with the VS Code PlantUML extension
-or plantuml.com).
+The class diagram is `docs/SmartStay_Class_Diagram.drawio` (open in draw.io / app.diagrams.net) with the exported image
+`docs/SmartStay_Class_Diagram.png`. A PlantUML text version is kept in `docs/class-diagram.puml`.
 
 ## Assumptions
 

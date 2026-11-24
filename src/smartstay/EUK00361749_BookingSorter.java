@@ -7,8 +7,8 @@ import java.util.List;
  * Sorting algorithm used to list reservations in check-in order.
  *
  * <p>Merge sort is implemented by hand (instead of calling a library sort) to show the algorithm
- * clearly. It runs in O(n log n) time in every case and is stable, so bookings with the same
- * check-in date keep their booking-ID order.
+ * clearly. It runs in O(n log n) time and orders equal check-in dates by booking ID.
+ * It is stable for entries whose date and booking ID both compare equal.
  */
 public final class EUK00361749_BookingSorter {
 

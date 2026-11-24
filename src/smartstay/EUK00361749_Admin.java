@@ -7,7 +7,7 @@ import java.util.HexFormat;
 
 /**
  * A hotel administrator who manages room records. Only a SHA-256 hash of the password is kept in
- * memory, so the plain password is never stored.
+ * memory, so the Admin object retains the hash; the known demonstration password remains in the application constants.
  */
 public final class EUK00361749_Admin extends EUK00361749_Person {
 
