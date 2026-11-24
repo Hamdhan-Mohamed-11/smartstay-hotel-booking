@@ -1,6 +1,6 @@
 # SmartStay Hotel Booking System
 
-Hamdhan Mohamed Ameen | Kingston University ID EUK00361749 | ESOFT E179021
+Kingston University ID EUK00361749
 CI6115 Programming III – Patterns and Algorithms, Coursework 1
 
 A Java 17+ command-line application for room administration, guest registration, reservations
